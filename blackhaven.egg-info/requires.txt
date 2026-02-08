@@ -1,0 +1,5 @@
+colorama
+rich
+prompt_toolkit
+bcrypt
+openai
