@@ -1,5 +1,17 @@
 # BlackHaven
 
+## Legal Disclaimer
+
+BlackHaven Framework is provided for educational and authorized security research purposes only.
+
+The author assumes no liability and is not responsible for any misuse or damage caused by this software.
+
+Users are solely responsible for ensuring they have proper authorization before using this tool.
+
+Unauthorized use may violate local, national, or international laws.
+
+Copyright (c) 2026 erraf132. All rights reserved.
+
 **BlackHaven** is a professional OSINT and security auditing toolkit with a hardened, red-team style terminal interface. It is designed for authorized security testing, training, and defensive research workflows.
 
 ```
@@ -106,6 +118,3 @@ Each plugin must expose `get_module()` and return a dict with:
 - **Permission errors**: Run in a user-writable directory and avoid restricted paths.
 - **Colors not showing**: Use a terminal that supports ANSI colors.
 - **Unexpected error occurred**: Check the log at `~/.blackhaven/results/blackhaven.log`.
-
-## Legal Disclaimer
-BlackHaven is provided for educational purposes and authorized security testing only. You must have explicit permission to test or access any systems, networks, or data. Unauthorized use may be illegal and could result in civil or criminal penalties. By using this tool, you accept full responsibility for your actions and agree to comply with all applicable laws and regulations.

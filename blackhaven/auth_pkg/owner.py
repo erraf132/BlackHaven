@@ -1,3 +1,11 @@
+"""
+BlackHaven Framework
+Copyright (c) 2026 erraf132 and Vyrn.exe Official
+All rights reserved.
+"""
+
+
+
 from __future__ import annotations
 
 from typing import Dict, Optional, Tuple

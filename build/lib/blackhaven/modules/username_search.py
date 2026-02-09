@@ -30,7 +30,7 @@ def run() -> None:
         color = Fore.GREEN if found == "yes" else Fore.RED if found == "no" else Fore.YELLOW
         line = f"- {entry['site']}: {status} ({entry['url']})"
         print(f"{color}{line}{Style.RESET_ALL}")
-    print("\nSaved results to: ~/.blackhaven/results/")
+    print("\nSaved results to: /home/hacker/BlackHaven/results/usernames/")
 
 
 def get_module():

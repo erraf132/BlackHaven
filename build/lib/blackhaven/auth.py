@@ -2,8 +2,13 @@ from __future__ import annotations
 
 import getpass
 
+from blackhaven.auth_pkg.db import (
+    create_owner,
+    get_owner_username,
+    owner_exists,
+    verify_owner_login,
+)
 from blackhaven.auth_pkg.session import SessionUser, get_current_user, set_current_user
-from blackhaven.database import get_owner_username, owner_exists, verify_owner_login, create_owner
 
 
 def _prompt_username() -> str:

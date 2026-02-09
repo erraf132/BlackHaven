@@ -1,12 +1,14 @@
 Metadata-Version: 2.4
 Name: blackhaven
-Version: 1.0.0
+Version: 3.0.0
 Summary: BlackHaven - OSINT & Security Auditing Toolkit
 Author: 
 Requires-Python: >=3.9
+License-File: LICENSE
 Requires-Dist: colorama
 Requires-Dist: rich
 Requires-Dist: prompt_toolkit
 Requires-Dist: bcrypt
-Requires-Dist: openai
+Requires-Dist: argon2-cffi
+Dynamic: license-file
 Dynamic: requires-python

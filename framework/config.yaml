@@ -1,0 +1,153 @@
+# BlackHaven Framework configuration
+# All values are safe, defensive, and OSINT-only.
+
+default_ports:
+  - 20
+  - 21
+  - 22
+  - 23
+  - 25
+  - 53
+  - 67
+  - 68
+  - 69
+  - 80
+  - 110
+  - 111
+  - 119
+  - 123
+  - 135
+  - 137
+  - 138
+  - 139
+  - 143
+  - 161
+  - 389
+  - 443
+  - 445
+  - 465
+  - 514
+  - 515
+  - 587
+  - 631
+  - 993
+  - 995
+  - 1080
+  - 1433
+  - 1521
+  - 1723
+  - 2049
+  - 2082
+  - 2083
+  - 2100
+  - 2222
+  - 2483
+  - 2484
+  - 3128
+  - 3306
+  - 3389
+  - 3690
+  - 4000
+  - 4444
+  - 4567
+  - 5000
+  - 5060
+  - 5432
+  - 5900
+  - 5985
+  - 5986
+  - 6000
+  - 6379
+  - 6667
+  - 7001
+  - 7002
+  - 7070
+  - 8000
+  - 8008
+  - 8080
+  - 8081
+  - 8086
+  - 8087
+  - 8088
+  - 8090
+  - 8443
+  - 8888
+  - 9000
+  - 9001
+  - 9002
+  - 9042
+  - 9200
+  - 9300
+  - 9418
+  - 9999
+  - 10000
+  - 11211
+  - 27017
+  - 27018
+  - 27019
+  - 28017
+  - 30000
+  - 33848
+  - 49152
+  - 49153
+  - 49154
+  - 49155
+  - 49156
+  - 49157
+  - 50000
+  - 50070
+  - 50075
+  - 61616
+  - 62078
+  - 65535
+
+# Generic timeout used for DNS, HTTP, and socket operations.
+timeout: 6
+
+# Thread count used for concurrent modules.
+thread_count: 64
+
+# Output folder for JSON and HTML exports.
+output_directory: "output"
+
+# Default wordlist for subdomain enumeration (inline list or a file path).
+default_wordlist:
+  - www
+  - mail
+  - ftp
+  - api
+  - dev
+  - staging
+  - test
+  - portal
+  - vpn
+  - admin
+  - beta
+  - blog
+  - cdn
+  - assets
+  - static
+  - img
+  - images
+  - secure
+  - shop
+  - store
+  - support
+  - docs
+  - status
+  - monitor
+  - auth
+  - sso
+  - gateway
+  - edge
+  - mx
+  - ns1
+  - ns2
+  - intranet
+  - git
+  - gitlab
+  - jenkins
+  - ci
+  - jira
+  - confluence
+  - help

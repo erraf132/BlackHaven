@@ -12,6 +12,8 @@ from blackhaven.auth_pkg.owner import (
     verify_owner_access,
 )
 from blackhaven.auth_pkg.register import create_user
+from blackhaven.auth_pkg.session import set_current_user
+from blackhaven.auth_pkg.db import get_machine_id
 from blackhaven.modules._utils import ensure_results_dir
 
 import os
@@ -44,10 +46,21 @@ def ensure_owner(username: str, password: str) -> Tuple[bool, str]:
 def authenticate(username: str, password: str) -> Tuple[bool, str, str]:
     if owner_exists() and is_owner(username):
         ok, message = verify_owner(username, password)
+        if ok:
+            owner = load_owner()
+            stored_machine_id = owner.get("machine_id") if owner else None
+            current_machine = get_machine_id()
+            if not stored_machine_id or stored_machine_id != current_machine:
+                ok = False
+                message = "Owner account is locked to this machine."
         _log_security_event("login", username, "success" if ok else f"failure:{message}")
+        if ok:
+            set_current_user(username, "owner")
         return ok, message, "owner"
     ok, message, role = verify_login(username, password)
     _log_security_event("login", username, "success" if ok else f"failure:{message}")
+    if ok:
+        set_current_user(username, role)
     return ok, message, role
 
 

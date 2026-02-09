@@ -1,3 +1,11 @@
+"""
+BlackHaven Framework
+Copyright (c) 2026 erraf132 and Vyrn.exe Official
+All rights reserved.
+"""
+
+
+
 from __future__ import annotations
 
 import getpass
@@ -135,47 +143,30 @@ def _read_security_log(limit: int = 200) -> str:
 
 def show_disclaimer_screen() -> bool:
     init(autoreset=True)
-    width = min(80, _terminal_width() - 4)
-    title = "LEGAL DISCLAIMER AND AUTHORIZED USE ONLY"
-    header = "[ SYSTEM NOTICE ]"
-    body = (
-        "This system is restricted to authorized users only. "
-        "Unauthorized access is prohibited and may be prosecuted.\n\n"
-        "All actions are monitored and logged.\n\n"
-        "Type: I UNDERSTAND\n"
-        "to acknowledge and continue.\n\n"
-        "Type: EXIT to quit."
-    )
-    wrapped = _wrap_text(body, width - 6)
+    notice = """============================================================
+BLACKHAVEN FRAMEWORK — LEGAL NOTICE
+===================================
 
-    top = "┌" + ("─" * (width - 2)) + "┐"
-    bottom = "└" + ("─" * (width - 2)) + "┘"
+This software is intended for educational purposes and authorized security research only.
 
-    def build_panel(text_block: str) -> str:
-        lines = [
-            top,
-            "│" + " " * (width - 2) + "│",
-            "│" + _center_line(title, width - 2).ljust(width - 2) + "│",
-            "│" + " " * (width - 2) + "│",
-            "│" + _center_line(header, width - 2).ljust(width - 2) + "│",
-            "│" + " " * (width - 2) + "│",
-        ]
-        for line in text_block.splitlines():
-            lines.append("│ " + line.ljust(width - 4) + " │")
-        lines.extend([
-            "│" + " " * (width - 2) + "│",
-            bottom,
-        ])
-        return "\n".join(_center_line(line, _terminal_width()) for line in lines)
+Unauthorized use of this software against systems without explicit permission is illegal.
 
+The author is not responsible for any misuse, damage, or illegal activities conducted with this software.
+
+By using BlackHaven, you agree that you are solely responsible for your actions.
+
+Copyright (c) 2026 erraf132. All rights reserved.
+
+Type "I AGREE" to continue or Ctrl+C to exit.
+
+============================================================
+"""
     while True:
-        prompt = "\n> "
-        print(render_layout(build_panel(wrapped) + prompt), end="")
-        response = _input().strip()
-        if response == "EXIT":
-            return False
-        if response == "I UNDERSTAND":
+        print(render_layout(notice), end="")
+        response = _input("> ").strip()
+        if response == "I AGREE":
             return True
+        print('Confirmation not received. Type "I AGREE" to continue or Ctrl+C to exit.')
 
 
 def show_admin_panel() -> None:
@@ -384,8 +375,12 @@ def discover_modules() -> List[Dict]:
 
 
 def _menu_text(items: List[Dict]) -> str:
+    non_exit = [item for item in items if item.get("key") != "00"]
+    exit_item = next((item for item in items if item.get("key") == "00"), None)
+    non_exit.sort(key=lambda item: int(item["key"]))
+    ordered = non_exit + ([exit_item] if exit_item else [])
     lines = []
-    for item in items:
+    for item in ordered:
         key = item["key"]
         label = item["label"]
         lines.append(f"[ {key} ] {label}")
@@ -412,7 +407,12 @@ def _build_menu_items(modules: List[Dict]) -> List[Dict]:
     for key, label, module_name in layout:
         module = by_name.get(module_name) if module_name else None
         items.append({"key": key, "label": label, "module": module})
-    return items
+    non_exit = [item for item in items if item["key"] != "00"]
+    exit_item = next((item for item in items if item["key"] == "00"), None)
+    non_exit.sort(key=lambda item: int(item["key"]))
+    if exit_item:
+        non_exit.append(exit_item)
+    return non_exit
 
 
 def run_menu(modules: List[Dict]) -> Optional[Dict]:

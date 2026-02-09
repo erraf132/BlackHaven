@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Dict, Optional, Tuple
 
-from blackhaven.database import (
+from blackhaven.auth_pkg.db import (
     create_owner,
-    get_machine_fingerprint,
+    get_machine_id,
     get_owner_record,
     get_owner_username,
     owner_exists,
@@ -26,11 +26,8 @@ def verify_owner_access(username: str) -> bool:
         return False
     if owner.get("username", "").lower() != username.lower():
         return False
-    fingerprint = get_machine_fingerprint()
-    return (
-        owner.get("hostname") == fingerprint["hostname"]
-        and owner.get("machine_id") == fingerprint["machine_id"]
-    )
+    stored_machine_id = owner.get("machine_id")
+    return bool(stored_machine_id and stored_machine_id == get_machine_id())
 
 
 def is_owner(username: str) -> bool:

@@ -6,7 +6,9 @@ import importlib.util
 import io
 import os
 import pkgutil
+import re
 import shutil
+import subprocess
 import textwrap
 from contextlib import redirect_stderr, redirect_stdout
 from types import ModuleType
@@ -19,10 +21,9 @@ from blackhaven.auth_pkg.auth import authenticate, ensure_owner, register_user
 from blackhaven.auth_pkg.logger import log_action, read_activity_log
 from blackhaven.auth_pkg.owner import owner_exists
 from blackhaven.auth_pkg.session import get_current_user, set_current_user
-from blackhaven.database import get_owner_record
+from blackhaven.auth_pkg.db import get_owner_record, get_user_id
 from blackhaven.security.auth import log_session, read_session_log
 from blackhaven.modules._utils import get_logger, setup_logging, user_plugins_dir
-from .elite_render import load_logo_lines
 
 LOG = get_logger("BlackHaven")
 
@@ -31,7 +32,18 @@ THEME_LOGO = Fore.RED + Style.BRIGHT
 THEME_RESET = Style.RESET_ALL
 
 _SECURITY_LOG_PATH = os.path.join(os.path.expanduser("~"), ".blackhaven", "results", "security.log")
-_LOGO_LINES: Optional[List[str]] = None
+_LOGO_LINES: Optional[List[str]] = [
+    "             ____  _        _    ____ _  ___   _    ___     _______ _   _",
+    "            | __ )| |      / \\  / ___| |/ / | | |  / \\ \\   / / ____| \\ | |",
+    "            |  _ \\| |     / _ \\| |   | ' /| |_| | / _ \\ \\ / /|  _| |  \\| |",
+    "            | |_) | |___ / ___ \\ |___| . \\|  _  |/ ___ \\ V / | |___| |\\  |",
+    "            |____/|_____/_/   \\_\\____|_|\\_\\_| |_/_/   \\_\\_/  |_____|_| \\_|",
+    "                                         BLACKHAVEN",
+]
+_VERSION_LINES: Optional[List[str]] = [
+    "BlackHaven v3.0 OMEGA",
+    "coded by Vyrn.exe",
+]
 
 
 def clear_screen() -> None:
@@ -43,30 +55,38 @@ def _terminal_width() -> int:
 
 
 def _center_line(text: str, width: int) -> str:
-    padding = max(0, (width - len(text)) // 2)
+    visible_text = re.sub(r"\x1b\[[0-9;]*m", "", text)
+    padding = max(0, (width - len(visible_text)) // 2)
     return " " * padding + text
 
 
 def _load_logo() -> List[str]:
     global _LOGO_LINES
-    if _LOGO_LINES is None:
-        _LOGO_LINES = load_logo_lines()
     return _LOGO_LINES
 
 
 def display_logo() -> None:
-    # Intentionally no-op to avoid duplicate logo rendering.
+    print(render_layout(), end="")
     return None
 
 
 def _render_logo() -> str:
     width = _terminal_width()
     lines = _load_logo()
-    rendered = []
-    for line in lines:
-        centered = _center_line(line, width)
-        rendered.append(f"{THEME_LOGO}{centered}{THEME_RESET}")
-    return "\n".join(rendered)
+
+    logo = "\n".join(
+        _center_line(f"{THEME_LOGO}{line}{THEME_RESET}", width)
+        for line in lines
+    )
+
+    version = "\n".join(
+        _center_line(f"{THEME_TEXT}{line}{THEME_RESET}", width)
+        for line in _VERSION_LINES or []
+    )
+
+    if version:
+        return logo + "\n\n" + version
+    return logo
 
 
 def render_layout(content: Optional[str] = None) -> str:
@@ -195,8 +215,9 @@ def show_admin_panel() -> None:
 
 def show_auth_menu() -> bool:
     if not owner_exists():
-        if not _handle_owner_bootstrap():
-            return False
+        if _handle_owner_bootstrap():
+            return True
+        return False
     while True:
         menu = "[1] Login\n[2] Create Account\n[3] Exit\n\nSelect an option: "
         print(render_layout(menu), end="")
@@ -212,6 +233,15 @@ def show_auth_menu() -> bool:
                 return True
             continue
         print(render_layout("Invalid option."), end="")
+    return False
+
+
+def require_login() -> bool:
+    while True:
+        success = show_auth_menu()
+        if success:
+            return True
+        return False
 
 
 def _handle_owner_bootstrap() -> bool:
@@ -228,6 +258,9 @@ def _handle_owner_bootstrap() -> bool:
             continue
         ok, message = ensure_owner(username, password)
         if ok:
+            user_id = get_user_id(username)
+            set_current_user(username, "owner", user_id=user_id)
+            log_action(username, "created owner account")
             return True
         print(render_layout(message), end="")
         return False
@@ -239,7 +272,8 @@ def _handle_login() -> bool:
     password = _getpass("Password: ").strip()
     ok, message, role = authenticate(username, password)
     if ok:
-        set_current_user(username, role)
+        user_id = get_user_id(username)
+        set_current_user(username, role, user_id=user_id)
         log_action(username, "login")
         return True
     print(render_layout(message), end="")
@@ -260,7 +294,8 @@ def _handle_register() -> bool:
 
     ok, message, role = register_user(username, password)
     if ok:
-        set_current_user(username, role)
+        user_id = get_user_id(username)
+        set_current_user(username, role, user_id=user_id)
         log_action(username, "created account")
         return True
     print(render_layout(message), end="")
@@ -278,6 +313,36 @@ def _load_module_from_path(path: str, module_name: str) -> Optional[ModuleType]:
     except Exception as exc:
         LOG.exception("Plugin load failed: %s", exc)
         return None
+
+
+def username_intelligence_ultra() -> None:
+    subprocess.run(
+        [
+            "/home/hacker/BlackHaven/venv/bin/python",
+            "/home/hacker/BlackHaven/skills/username_intelligence_ultra.py",
+        ],
+        check=False,
+    )
+
+
+def god_osint_core() -> None:
+    subprocess.run(
+        [
+            "/home/hacker/BlackHaven/venv/bin/python",
+            "/home/hacker/BlackHaven/skills/god_osint_core.py",
+        ],
+        check=False,
+    )
+
+
+def omega_scan() -> None:
+    subprocess.run(
+        [
+            "/home/hacker/BlackHaven/venv/bin/python",
+            "/home/hacker/BlackHaven/skills/omega_core.py",
+        ],
+        check=False,
+    )
 
 
 def discover_modules() -> List[Dict]:
@@ -311,8 +376,7 @@ def discover_modules() -> List[Dict]:
         "Port Scanner",
         "Password Checker",
         "System Info",
-        "AI Assistant",
-        "Generate AI Report",
+        "Intel Core",
     ]
     order_index = {name: idx for idx, name in enumerate(order)}
     items.sort(key=lambda x: order_index.get(x["name"], 999))
@@ -335,9 +399,12 @@ def _build_menu_items(modules: List[Dict]) -> List[Dict]:
         ("02", "Email Intelligence", "Email Lookup"),
         ("03", "Domain Intelligence", "Domain Info"),
         ("04", "Network Scanner", "Port Scanner"),
-        ("05", "Password Analyzer", "Password Checker"),
-        ("06", "AI Assistant", "AI Assistant"),
-        ("07", "Owner Control Panel", None),
+        ("05", "Username Intelligence ULTRA", None),
+        ("06", "GOD OSINT CORE", None),
+        ("07", "OMEGA SCAN", None),
+        ("10", "Password Analyzer", "Password Checker"),
+        ("09", "Intel Core", "Intel Core"),
+        ("11", "Owner Control Panel", None),
         ("08", "System Intelligence", "System Info"),
         ("00", "Exit", None),
     ]
@@ -358,8 +425,17 @@ def run_menu(modules: List[Dict]) -> Optional[Dict]:
 
         if choice in {"0", "00"}:
             return None
-        if choice == "07":
+        if choice == "11":
             show_admin_panel()
+            continue
+        if choice in {"5", "05"}:
+            username_intelligence_ultra()
+            continue
+        if choice in {"6", "06"}:
+            god_osint_core()
+            continue
+        if choice in {"7", "07"}:
+            omega_scan()
             continue
         if not choice.isdigit():
             print(render_layout("Invalid option."), end="")
@@ -390,7 +466,8 @@ def run_app() -> int:
             user = get_current_user()
             if user:
                 log_action(user.username, f"executed {selected['name']}")
-                log_session(user.username, selected["name"])
+                if user.user_id is not None:
+                    log_session(user.user_id, selected["name"])
             output = io.StringIO()
             with redirect_stdout(output), redirect_stderr(output):
                 selected["run"]()

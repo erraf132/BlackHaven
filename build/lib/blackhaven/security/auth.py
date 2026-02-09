@@ -9,6 +9,12 @@ from datetime import datetime
 from hashlib import sha256
 from typing import Dict, List, Optional
 
+from blackhaven.auth_pkg.db import (
+    get_user_by_username,
+    list_users as db_list_users,
+    log_session as db_log_session,
+    read_session_log as db_read_session_log,
+)
 from blackhaven.auth_pkg.session import SessionUser, set_current_user
 
 
@@ -75,46 +81,19 @@ def _verify_password(stored_hash: str, password: str) -> bool:
 
 
 def list_users() -> List[Dict[str, str]]:
-    users = _load_users()
-    result = []
-    for username, info in users.items():
-        result.append(
-            {
-                "username": username,
-                "role": info.get("role", "user"),
-                "created_at": info.get("created", ""),
-            }
-        )
-    result.sort(key=lambda x: x["username"].lower())
-    return result
+    return db_list_users()
 
 
 def read_users_json() -> str:
-    _ensure_storage()
-    try:
-        with open(_users_path(), "r", encoding="utf-8") as f:
-            return f.read().strip() or "{}"
-    except Exception:
-        return "{}"
+    return json.dumps({"users": db_list_users()}, indent=2)
 
 
 def read_session_log(limit: Optional[int] = None) -> str:
-    _ensure_storage()
-    try:
-        with open(_sessions_path(), "r", encoding="utf-8") as f:
-            lines = f.readlines()
-    except Exception:
-        return "No session logs found."
-    if limit:
-        lines = lines[-limit:]
-    return "".join(lines).strip() or "No session logs found."
+    return db_read_session_log(limit=limit)
 
 
-def log_session(username: str, module_used: str) -> None:
-    _ensure_storage()
-    line = f"[{_timestamp()}] {username} | {module_used}\n"
-    with open(_sessions_path(), "a", encoding="utf-8") as f:
-        f.write(line)
+def log_session(user_id: int, module_used: str) -> None:
+    db_log_session(user_id, module_used, success=True)
 
 
 def can_access_admin(username: str) -> bool:
@@ -179,7 +158,9 @@ def require_login() -> SessionUser:
                 role = "owner" if username == OWNER_USERNAME else "user"
                 user = SessionUser(username=username, role=role)
                 set_current_user(user.username, user.role)
-                log_session(user.username, "login")
+                record = get_user_by_username(user.username)
+                if record and record.get("id") is not None:
+                    log_session(int(record["id"]), "login")
                 return user
             print("Username already exists.\n")
             continue
@@ -190,7 +171,9 @@ def require_login() -> SessionUser:
             if role:
                 user = SessionUser(username=username, role=role)
                 set_current_user(user.username, user.role)
-                log_session(user.username, "login")
+                record = get_user_by_username(user.username)
+                if record and record.get("id") is not None:
+                    log_session(int(record["id"]), "login")
                 return user
             print("Invalid username or password.\n")
             continue

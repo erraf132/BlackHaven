@@ -3,3 +3,7 @@ rich
 prompt_toolkit
 bcrypt
 argon2-cffi
+requests
+dnspython
+python-whois
+PyYAML

@@ -1,27 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional
+from blackhaven.auth_pkg.db import (
+    SessionUser,
+    clear_session,
+    get_current_user,
+    set_current_user,
+)
 
-
-@dataclass
-class SessionUser:
-    username: str
-    role: str
-
-
-_current_user: Optional[SessionUser] = None
-
-
-def set_current_user(username: str, role: str) -> None:
-    global _current_user
-    _current_user = SessionUser(username=username, role=role)
-
-
-def get_current_user() -> Optional[SessionUser]:
-    return _current_user
-
-
-def clear_session() -> None:
-    global _current_user
-    _current_user = None
+__all__ = [
+    "SessionUser",
+    "clear_session",
+    "get_current_user",
+    "set_current_user",
+]

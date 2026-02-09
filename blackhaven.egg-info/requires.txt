@@ -2,4 +2,4 @@ colorama
 rich
 prompt_toolkit
 bcrypt
-openai
+argon2-cffi
