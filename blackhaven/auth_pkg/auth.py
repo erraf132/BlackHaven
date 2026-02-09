@@ -16,6 +16,7 @@ from blackhaven.auth_pkg.owner import (
     load_owner,
     owner_exists,
     create_owner,
+    global_owner_exists,
     verify_owner,
     verify_owner_access,
 )
@@ -42,7 +43,11 @@ def _log_security_event(action: str, username: str, outcome: str) -> None:
 def ensure_owner(username: str, password: str) -> Tuple[bool, str]:
     if owner_exists():
         _log_security_event("owner_create", username, "denied_existing_owner")
-        return False, "Owner already exists."
+        return False, "Owner already exists. Cannot create another owner account."
+    exists, message = global_owner_exists()
+    if exists:
+        _log_security_event("owner_create", username, "denied_global_owner")
+        return False, message or "Owner already exists. Cannot create another owner account."
     ok, message = create_owner(username, password)
     if ok:
         _log_security_event("owner_create", username, "success")

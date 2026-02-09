@@ -13,6 +13,7 @@ import json
 import os
 import platform
 import sqlite3
+import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Dict, Optional, Tuple
@@ -163,6 +164,48 @@ def initialize_database() -> None:
         )
         conn.commit()
         _migrate_legacy_users(conn)
+
+
+def _get_meta(conn: sqlite3.Connection, key: str) -> Optional[str]:
+    row = conn.execute(
+        "SELECT value FROM meta WHERE key = ?",
+        (key,),
+    ).fetchone()
+    return row["value"] if row else None
+
+
+def get_meta(key: str) -> Optional[str]:
+    """Return a metadata value by key."""
+    initialize_database()
+    with _connect() as conn:
+        return _get_meta(conn, key)
+
+
+def set_meta(key: str, value: str) -> None:
+    """Set a metadata value by key."""
+    initialize_database()
+    with _connect() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)",
+            (key, value),
+        )
+        conn.commit()
+
+
+def get_or_create_install_id() -> str:
+    """Return a stable install identifier for this machine."""
+    initialize_database()
+    with _connect() as conn:
+        existing = _get_meta(conn, "install_id")
+        if existing:
+            return existing
+        install_id = str(uuid.uuid4())
+        conn.execute(
+            "INSERT OR REPLACE INTO meta (key, value) VALUES ('install_id', ?)",
+            (install_id,),
+        )
+        conn.commit()
+        return install_id
 
 
 def _hash_password(password: str) -> str:
@@ -595,6 +638,8 @@ __all__ = [
     "get_current_user",
     "get_owner_record",
     "get_owner_username",
+    "get_meta",
+    "get_or_create_install_id",
     "get_user_id",
     "get_user_by_username",
     "initialize_database",
@@ -608,6 +653,7 @@ __all__ = [
     "module_results_path",
     "owner_exists",
     "register_user",
+    "set_meta",
     "set_current_user",
     "verify_owner_login",
 ]

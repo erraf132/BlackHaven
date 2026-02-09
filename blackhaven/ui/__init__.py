@@ -24,14 +24,15 @@ from typing import Dict, List, Optional
 
 from colorama import Fore, Style, init
 
-from blackhaven.auth import current_user_is_admin
+from blackhaven.auth import current_user_is_admin, require_owner_access
 from blackhaven.auth_pkg.auth import authenticate, ensure_owner, register_user
 from blackhaven.auth_pkg.logger import log_action, read_activity_log
-from blackhaven.auth_pkg.owner import owner_exists
+from blackhaven.auth_pkg.owner import owner_exists, global_owner_exists
 from blackhaven.auth_pkg.session import get_current_user, set_current_user
 from blackhaven.auth_pkg.db import get_owner_record, get_user_id
 from blackhaven.security.auth import log_session, read_session_log
 from blackhaven.modules._utils import get_logger, setup_logging, user_plugins_dir
+from blackhaven.utils.results_file import append_result_record
 
 LOG = get_logger("BlackHaven")
 
@@ -206,6 +207,12 @@ def show_admin_panel() -> None:
 
 def show_auth_menu() -> bool:
     if not owner_exists():
+        # Block local owner creation if a global owner already exists.
+        exists, message = global_owner_exists()
+        if exists:
+            print(render_layout(message), end="")
+            _input("Return to menu: ")
+            return False
         if _handle_owner_bootstrap():
             return True
         return False
@@ -307,33 +314,62 @@ def _load_module_from_path(path: str, module_name: str) -> Optional[ModuleType]:
 
 
 def username_intelligence_ultra() -> None:
-    subprocess.run(
+    # Capture output so we can append it to the shared results file.
+    result = subprocess.run(
         [
             "/home/hacker/BlackHaven/venv/bin/python",
             "/home/hacker/BlackHaven/skills/username_intelligence_ultra.py",
         ],
         check=False,
+        capture_output=True,
+        text=True,
     )
+    output = (result.stdout or "") + (result.stderr or "")
+    append_result_record("Username Intelligence ULTRA", output.strip() or "Completed.")
 
 
 def god_osint_core() -> None:
-    subprocess.run(
+    # Protect sensitive command; owner only.
+    try:
+        require_owner_access("GOD OSINT CORE")
+    except PermissionError:
+        print(render_layout("ACCESS DENIED\nOWNER REQUIRED"), end="")
+        _input("Return to menu: ")
+        return
+    # Capture output so we can append it to the shared results file.
+    result = subprocess.run(
         [
             "/home/hacker/BlackHaven/venv/bin/python",
             "/home/hacker/BlackHaven/skills/god_osint_core.py",
         ],
         check=False,
+        capture_output=True,
+        text=True,
     )
+    output = (result.stdout or "") + (result.stderr or "")
+    append_result_record("GOD OSINT CORE", output.strip() or "Completed.")
 
 
 def omega_scan() -> None:
-    subprocess.run(
+    # Protect sensitive command; owner only.
+    try:
+        require_owner_access("OMEGA SCAN")
+    except PermissionError:
+        print(render_layout("ACCESS DENIED\nOWNER REQUIRED"), end="")
+        _input("Return to menu: ")
+        return
+    # Capture output so we can append it to the shared results file.
+    result = subprocess.run(
         [
             "/home/hacker/BlackHaven/venv/bin/python",
             "/home/hacker/BlackHaven/skills/omega_core.py",
         ],
         check=False,
+        capture_output=True,
+        text=True,
     )
+    output = (result.stdout or "") + (result.stderr or "")
+    append_result_record("OMEGA SCAN", output.strip() or "Completed.")
 
 
 def discover_modules() -> List[Dict]:
@@ -473,13 +509,25 @@ def run_app() -> int:
                 selected["run"]()
 
             result = output.getvalue().strip() or "Module ready."
+            # Append every module run to the shared results file in JSONL.
+            append_result_record(selected["name"], result, status="success")
             print(render_layout(result), end="")
             _input("Return to menu: ")
             continue
         except KeyboardInterrupt:
+            append_result_record(
+                selected["name"],
+                "Cancelled by user.",
+                status="cancelled",
+            )
             print(render_layout("Cancelled."), end="")
             _input("Return to menu: ")
         except Exception as exc:
             LOG.exception("Module error: %s", exc)
+            append_result_record(
+                selected["name"],
+                f"Error: {exc}",
+                status="error",
+            )
             print(render_layout("Error: an unexpected error occurred."), end="")
             _input("Return to menu: ")

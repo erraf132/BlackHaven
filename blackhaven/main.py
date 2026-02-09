@@ -7,6 +7,7 @@ All rights reserved.
 
 from .ui import display_logo, require_login, run_app
 from .ui.banner import show_banner
+from .utils.results_file import prompt_results_file
 
 LEGAL_NOTICE = """============================================================
 BLACKHAVEN FRAMEWORK — AUTHORIZED USE ONLY
@@ -44,6 +45,8 @@ def show_legal_disclaimer() -> None:
 
 def main() -> int:
     show_legal_disclaimer()
+    # Prompt for the shared results file before any auth flow.
+    prompt_results_file()
     if not require_login():
         return 0
     show_banner()
