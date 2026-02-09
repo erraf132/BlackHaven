@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blackhaven"
-version = "1.0.0"
+version = "3.0.0"
 description = "BlackHaven - OSINT & Security Auditing Toolkit"
 requires-python = ">=3.9"
 dependencies = ["colorama", "rich", "prompt_toolkit", "bcrypt", "argon2-cffi"]
