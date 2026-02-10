@@ -1,120 +1,178 @@
-# BlackHaven
+# BlackHaven Framework v3.0 OMEGA
 
-## Legal Disclaimer
+**BlackHaven** is an advanced OSINT and security auditing framework designed for authorized cybersecurity research, education, and defensive security analysis.
 
-BlackHaven Framework is provided for educational and authorized security research purposes only.
+Developed by **erraf132 and Vyrn.exe Official**
 
-The author assumes no liability and is not responsible for any misuse or damage caused by this software.
+---
 
-Users are solely responsible for ensuring they have proper authorization before using this tool.
+## Overview
 
-Unauthorized use may violate local, national, or international laws.
+BlackHaven provides a modular and secure environment for:
 
-Copyright (c) 2026 erraf132. All rights reserved.
+* OSINT investigations
+* Username intelligence gathering
+* Email analysis
+* Network and domain reconnaissance
+* System and security auditing
+* Controlled and authorized security testing
 
-**BlackHaven** is a professional OSINT and security auditing toolkit with a hardened, red-team style terminal interface. It is designed for authorized security testing, training, and defensive research workflows.
+BlackHaven uses a secure authentication system with a globally unique owner account and controlled access levels.
 
-```
-██████████████████████████████████
-        BLACKHAVEN v1.0
-   Advanced Security Framework
-██████████████████████████████████
-```
+---
 
 ## Features
-- Animated, persistent banner and professional CLI layout
-- Modular OSINT and security tooling
-- Multithreaded username search and port scanning
-- Domain intelligence (WHOIS + DNS)
-- Email lookup and password strength checks
-- System info collection
-- Export results to TXT, JSON, and CSV
-- Plugin system for custom modules
 
-## Requirements
-- Python 3.9 or newer
-- Linux (Kali, Ubuntu) or Windows 10/11
-- Terminal with ANSI color support
+* Secure authentication system
+* Global unique Owner account
+* Modular architecture
+* Automatic results logging to file
+* Professional terminal interface
+* Secure password hashing (Argon2 / bcrypt)
+* OSINT and reconnaissance modules
+* Fully local execution (no forced external servers)
+* Expandable module system
+
+---
 
 ## Installation
 
-### Kali Linux
-```bash
-sudo apt update
-sudo apt install -y python3 python3-venv python3-pip
+### Recommended method (Linux / Kali Linux)
+
+Clone the repository:
+
+```
+git clone https://github.com/erraf132/BlackHaven.git
 cd BlackHaven
-./install.sh
 ```
 
-### Ubuntu
-```bash
-sudo apt update
-sudo apt install -y python3 python3-venv python3-pip
-cd BlackHaven
-./install.sh
+Create virtual environment:
+
+```
+python3 -m venv venv
 ```
 
-### Windows (PowerShell)
-```powershell
-py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install --upgrade pip
-pip install .
+Activate virtual environment:
+
+```
+source venv/bin/activate
 ```
 
-### Alternative Install
-```bash
-pip install .
+Install BlackHaven:
+
+```
+pip install -e .
 ```
 
-## Usage
-```bash
+Run BlackHaven:
+
+```
 blackhaven
 ```
 
-```bash
-python3 -m blackhaven.main
+---
+
+## First launch
+
+On first launch, BlackHaven will:
+
+* Show the legal disclaimer
+* Ask to create the global results file
+* Require creation of the Owner account (first install only)
+* Secure all future access
+
+---
+
+## Project Structure
+
+```
+blackhaven/
+│
+├── auth_pkg/          Authentication system
+├── core/              Core engines
+├── modules/           OSINT and security modules
+├── security/          Security configuration
+├── ui/                Interface and banner
+├── utils/             Utilities and results logging
+├── data/              Logs and activity files
+│
+├── main.py            Main entry point
+└── __main__.py        CLI launcher
 ```
 
-## Security
-Owner-only access enabled.
+---
 
-## Screenshot
-- Add screenshots to `docs/screenshots/` and update this section.
+## Security Model
 
-## Folder Structure
-```text
-BlackHaven/
-├─ blackhaven/              Core package
-│  ├─ main.py               Entry point
-│  ├─ ui.py                 UI rendering and layouts
-│  └─ modules/              Built-in modules
-├─ plugins/                 Example plugins
-├─ install.sh               Linux installer
-├─ uninstall.sh             Linux uninstaller
-├─ README.md                Documentation
-└─ requirements.txt         Dependencies
+BlackHaven uses a secure access model:
+
+* Owner (global root access)
+* Admin (optional)
+* User (standard access)
+
+Only one Owner exists globally.
+
+Owner privileges include:
+
+* Full system access
+* Access to all result files
+* System configuration control
+
+---
+
+## Results Logging
+
+All results are automatically saved to the configured results file.
+
+This ensures:
+
+* Audit trail
+* Traceability
+* Persistent intelligence storage
+
+---
+
+## Updating
+
+To update BlackHaven:
+
+```
+git pull
+source venv/bin/activate
+pip install -e .
 ```
 
-## Plugin System
-BlackHaven loads plugins from the user plugin directory.
+---
 
-Default user plugin path:
-```
-~/.blackhaven/plugins
-```
+## Legal Disclaimer
 
-Each plugin must expose `get_module()` and return a dict with:
-```python
-{
-  "name": "Module Name",
-  "description": "What it does",
-  "run": callable,
-}
-```
+BlackHaven is intended for:
 
-## Troubleshooting
-- **No modules found**: Verify `blackhaven/modules/` exists and Python can import the package.
-- **Permission errors**: Run in a user-writable directory and avoid restricted paths.
-- **Colors not showing**: Use a terminal that supports ANSI colors.
-- **Unexpected error occurred**: Check the log at `~/.blackhaven/results/blackhaven.log`.
+* Educational purposes
+* Authorized cybersecurity research
+* Defensive security testing
+
+Unauthorized use against systems without explicit permission is strictly prohibited.
+
+The authors assume no responsibility for misuse.
+
+You are responsible for complying with applicable laws.
+
+---
+
+## Author
+
+Developed by:
+
+**erraf132**
+**Vyrn.exe Official**
+
+BlackHaven Framework © 2026
+
+---
+
+## License
+
+All rights reserved.
+
+This software may not be redistributed, modified, or used without permission from the authors.
