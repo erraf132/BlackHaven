@@ -10,5 +10,6 @@ Requires-Dist: rich
 Requires-Dist: prompt_toolkit
 Requires-Dist: bcrypt
 Requires-Dist: argon2-cffi
+Requires-Dist: requests
 Dynamic: license-file
 Dynamic: requires-python

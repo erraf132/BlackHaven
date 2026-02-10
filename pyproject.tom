@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blackhaven"
+version = "3.0.0"
+description = "BlackHaven - OSINT & Security Auditing Toolkit"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "colorama",
+    "rich",
+    "prompt_toolkit",
+    "bcrypt",
+    "argon2-cffi"
+]
+
+[project.scripts]
+blackhaven = "blackhaven.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["blackhaven*"]
+
+[tool.setuptools.package-data]
+blackhaven = [
+    "DISCLAIMER.txt",
+    "data/*.json",
+    "security/*.json"
+]

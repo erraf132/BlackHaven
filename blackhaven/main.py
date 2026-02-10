@@ -37,22 +37,33 @@ Type "I AGREE" to continue or press Ctrl+C to exit.
 def show_legal_disclaimer() -> None:
     print(LEGAL_NOTICE)
     while True:
-        user_input = input("> ").strip()
+        try:
+            user_input = input("> ").strip()
+        except KeyboardInterrupt:
+            print("\nExiting BlackHaven.")
+            raise SystemExit(0)
+
         if user_input.casefold() == "i agree":
             return
+
         print('Confirmation not received. Type "I AGREE" to continue or Ctrl+C to exit.')
 
 
 def main() -> int:
     show_legal_disclaimer()
+
     # Prompt for the shared results file before any auth flow.
     prompt_results_file()
+
     if not require_login():
         return 0
+
     show_banner()
     display_logo()
+
     return run_app()
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

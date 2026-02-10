@@ -18,9 +18,12 @@ blackhaven.egg-info/top_level.txt
 blackhaven/auth_pkg/__init__.py
 blackhaven/auth_pkg/auth.py
 blackhaven/auth_pkg/db.py
+blackhaven/auth_pkg/errors.py
 blackhaven/auth_pkg/logger.py
 blackhaven/auth_pkg/login.py
 blackhaven/auth_pkg/owner.py
+blackhaven/auth_pkg/owner_manager.py
+blackhaven/auth_pkg/owner_registry.py
 blackhaven/auth_pkg/register.py
 blackhaven/auth_pkg/session.py
 blackhaven/core/__init__.py
@@ -50,6 +53,7 @@ blackhaven/ui/effects.py
 blackhaven/ui/elite_render.py
 blackhaven/utils/__init__.py
 blackhaven/utils/env.py
+blackhaven/utils/results_file.py
 blackhaven/utils/storage.py
 blackhaven_framework/__init__.py
 blackhaven_framework/main.py
