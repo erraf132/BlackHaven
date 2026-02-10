@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+venv/
+blackhaven/data/activity.log
