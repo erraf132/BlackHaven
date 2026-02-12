@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' file:; img-src 'self' data: file:; script-src 'self' 'unsafe-inline' file:; style-src 'self' 'unsafe-inline';" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackHaven-Frame</title>
+    <link rel="stylesheet" href="../node_modules/xterm/css/xterm.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="matrix-canvas"></canvas>
+    <div id="boot-screen" class="boot-screen">
+      <div class="boot-title">BLACKHAVEN-FRAME</div>
+      <div class="boot-sub">KALI CYBER OPERATIONS INTERFACE</div>
+      <div class="boot-bar"><span id="boot-progress"></span></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">BH-FRAME</div>
+      <div class="sysline" id="sysline">Initializing...</div>
+      <div class="controls">
+        <button id="new-tab-btn">+ Tab</button>
+        <button id="split-btn">Split</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="terminal-zone">
+        <div id="tab-strip" class="tab-strip"></div>
+        <div id="pane-wrap" class="pane-wrap single">
+          <div id="pane-a" class="term-pane active-pane"></div>
+          <div id="pane-b" class="term-pane hidden"></div>
+        </div>
+      </section>
+
+      <aside class="right-stack">
+        <section class="panel" id="monitor-panel">
+          <h3>System Monitor</h3>
+          <div id="monitor-grid" class="monitor-grid"></div>
+        </section>
+
+        <section class="panel" id="tools-panel">
+          <h3>Kali Tool Launcher</h3>
+          <div id="tool-list" class="tool-list"></div>
+          <div class="builder">
+            <select id="builder-tool"></select>
+            <input id="builder-args" placeholder="Arguments (space-separated)" />
+            <button id="launch-tool-btn">Launch</button>
+          </div>
+        </section>
+
+        <section class="panel" id="network-panel">
+          <h3>Network Ops</h3>
+          <div class="network-actions">
+            <input id="scan-target" value="192.168.1.0/24" />
+            <button id="scan-btn">Live Scan</button>
+          </div>
+          <pre id="scan-output" class="mono-box"></pre>
+          <button id="refresh-ports-btn">Refresh Ports</button>
+          <pre id="ports-output" class="mono-box"></pre>
+        </section>
+
+        <section class="panel" id="process-panel">
+          <h3>Process Viewer</h3>
+          <div class="proc-controls">
+            <button id="refresh-proc-btn">Refresh</button>
+          </div>
+          <div id="proc-table" class="proc-table"></div>
+        </section>
+
+        <section class="panel" id="plugin-panel">
+          <h3>Plugins</h3>
+          <div id="plugin-mount"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script src="../node_modules/xterm/lib/xterm.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "id": "matrix-green",
+  "name": "Matrix Green",
+  "colors": {
+    "bg": "#020803",
+    "panel": "rgba(3, 23, 6, 0.88)",
+    "line": "rgba(82, 255, 82, 0.22)",
+    "text": "#d2ffd2",
+    "muted": "#87c287",
+    "accent": "#52ff52"
+  }
+}

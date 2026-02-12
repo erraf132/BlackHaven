@@ -1,0 +1,12 @@
+{
+  "id": "default-neon",
+  "name": "Default Neon",
+  "colors": {
+    "bg": "#05070d",
+    "panel": "rgba(9, 18, 30, 0.85)",
+    "line": "rgba(0, 245, 212, 0.22)",
+    "text": "#cdf9ff",
+    "muted": "#83b8c5",
+    "accent": "#00f5d4"
+  }
+}

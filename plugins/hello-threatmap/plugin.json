@@ -1,0 +1,6 @@
+{
+  "id": "hello-threatmap",
+  "name": "Threat Map Demo",
+  "description": "Example plugin panel widget with rotating threat telemetry.",
+  "renderer": "renderer.js"
+}

@@ -1,0 +1,25 @@
+{
+  "shell": "/bin/bash",
+  "theme": "default-neon",
+  "accent": "#00f5d4",
+  "matrixEffect": false,
+  "toolWhitelist": [
+    "nmap",
+    "msfconsole",
+    "recon-ng",
+    "hydra",
+    "john",
+    "nikto",
+    "sqlmap",
+    "aircrack-ng",
+    "tcpdump",
+    "wireshark"
+  ],
+  "pluginDirs": [
+    "~/.blackhaven-frame/plugins"
+  ],
+  "themeDirs": [
+    "~/.blackhaven-frame/themes"
+  ],
+  "monitoringIntervalMs": 1200
+}

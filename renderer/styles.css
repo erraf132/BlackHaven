@@ -1,0 +1,285 @@
+:root {
+  --bg: #05070d;
+  --panel: rgba(9, 18, 30, 0.85);
+  --line: rgba(0, 245, 212, 0.22);
+  --text: #cdf9ff;
+  --muted: #83b8c5;
+  --accent: #00f5d4;
+  --danger: #ff4d6d;
+  --warn: #ffc857;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  background: radial-gradient(circle at top right, #0d172b 0%, var(--bg) 45%, #030407 100%);
+  color: var(--text);
+  overflow: hidden;
+}
+
+#matrix-canvas {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: linear-gradient(180deg, #010204 0%, #06101d 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.boot-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 550ms ease;
+}
+
+.boot-title {
+  font-size: 36px;
+  letter-spacing: 8px;
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(0, 245, 212, 0.7);
+}
+
+.boot-sub {
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+.boot-bar {
+  width: min(560px, 75vw);
+  height: 16px;
+  border: 1px solid var(--line);
+}
+
+.boot-bar span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0aff9d, var(--accent));
+}
+
+.topbar {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(2, 8, 15, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+
+.sysline {
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: var(--text);
+  background: #0b1524;
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+}
+
+button:hover {
+  border-color: var(--accent);
+  cursor: pointer;
+}
+
+.layout {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 10px;
+  height: calc(100% - 53px);
+  padding: 10px;
+}
+
+.terminal-zone,
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.terminal-zone {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+}
+
+.tab-strip {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.pane-wrap {
+  display: grid;
+  min-height: 0;
+}
+
+.pane-wrap.single {
+  grid-template-columns: 1fr;
+}
+
+.pane-wrap.split {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+}
+
+.term-pane {
+  min-height: 0;
+  border: 1px solid transparent;
+}
+
+.term-pane.active-pane {
+  border-color: var(--accent);
+}
+
+.term-pane.hidden {
+  display: none;
+}
+
+.right-stack {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr auto;
+  gap: 10px;
+  min-height: 0;
+}
+
+.panel {
+  padding: 8px;
+  overflow: auto;
+}
+
+.panel h3 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.monitor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.metric {
+  border: 1px solid var(--line);
+  padding: 6px;
+}
+
+.tool-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.tool-chip {
+  font-size: 11px;
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+}
+
+.builder {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.network-actions,
+.proc-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.mono-box {
+  margin: 6px 0;
+  max-height: 90px;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--line);
+  padding: 6px;
+  font-size: 11px;
+}
+
+.proc-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 70px 70px 60px;
+  gap: 6px;
+  font-size: 11px;
+  margin-bottom: 4px;
+  align-items: center;
+}
+
+.kill-btn {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.plugin-card {
+  border: 1px solid var(--line);
+  padding: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1.1fr 1fr;
+  }
+}
