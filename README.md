@@ -350,3 +350,39 @@ All rights reserved.
 
 This software may not be redistributed, modified, or used without permission from the authors.
 >>>>>>> adaa425ea95cdb85faa27662f9a3b79e01a1fd9e
+
+
+
+# 🖤 BlackHaven-Frame
+
+**BlackHaven-Frame** est un **terminal cockpit futuriste pour Kali Linux**, inspiré de **EDEX-UI**, combinant **BlackHaven main**, **framework** et outils **DeadNS / DNS Reaper** pour une expérience “hacker style”.
+
+---
+
+## ⚡ Features
+
+- Interface terminal stylée, futuriste et modulable  
+- Basculer entre le **BlackHaven main** et le **framework**  
+- Intégration de tous les outils BlackHaven  
+- Visualisation en temps réel du système et du réseau  
+- Support de plugins et extensions  
+- Modules OSINT intégrés (Email Intelligence, Network Scanner, etc.)
+
+---
+
+## 🛠 Installation
+
+```bash
+# Mettre à jour Kali et installer les dépendances
+sudo apt-get update
+sudo apt-get install -y build-essential python3 nodejs npm
+
+# Aller dans le dossier du cockpit
+cd ~/BlackHaven-Frame/blackhaven-frame-cockpit
+
+# Installer les packages Node.js
+npm install
+
+# Lancer l'interface
+npm run start
+
