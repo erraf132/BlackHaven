@@ -1,0 +1,2 @@
+[console_scripts]
+blackhaven = blackhaven.main:main

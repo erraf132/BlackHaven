@@ -1,0 +1,6 @@
+colorama
+rich
+prompt_toolkit
+bcrypt
+argon2-cffi
+requests

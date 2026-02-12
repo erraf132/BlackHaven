@@ -1,0 +1,9 @@
+BlackHaven Disclaimer
+
+BlackHaven is provided for educational purposes and for authorized security testing only.
+You must have explicit permission from the system owner before using this tool on any
+systems, networks, or accounts you do not own. Unauthorized use may be illegal and
+could result in criminal or civil penalties.
+
+By using BlackHaven, you agree that you are solely responsible for your actions and
+for complying with all applicable laws and regulations.
